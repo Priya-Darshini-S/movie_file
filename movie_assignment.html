@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        input {
+            width: 200px;
+        }
+        #movies {
+            height: 200px;
+            width: 206px;
+            border: 1px solid black;
+            overflow: scroll;
+            border-top:none;
+        }
+    </style>
+</head>
+<body>
+    <input oninput="debounce(main, 1000)" type="text" id="movie" placeholder="Enter movie name" />
+    
+    <div id="movies">
+
+    </div>
+</body>
+</html>
+
+<script>
+ //search movies
+let movie_div = document.getElementById("movies");
+ async function searchmovies(moviename){
+     try{
+        let res = await fetch(`http://www.omdbapi.com/?apikey=638a97f4&s=${moviename}`)
+        let data = await res.json();
+        return data;
+        console.log('data:', data)
+
+     }catch(e){
+        console.log("error:", e)
+     }
+    }
+   // searchmovies("extraction");
+
+    function appendMovies(movies){
+     
+
+        if(movies===undefined){
+            return false;
+        }
+        let movie_div = document.getElementById("movies");
+        movie_div.innerText = null;
+        movies.forEach(function(movie) {
+            let p=document.createElement("p")
+            p.innerText = movie.Title;
+            movie_div.append(p);
+        });
+
+    }
+   var timerId;
+    async function main(){
+        let name = document.getElementById("movie").value;
+
+        //get searched movies 
+        if(name.length < 3){
+            return false;
+        }
+        
+        let res = await  searchmovies(name);
+        let movies_data = res.Search;
+        appendMovies(movies_data);
+        console.log('res:', res)    
+    }
+
+    function debounce(func, delay){
+        //func is the main function
+           
+        //to clear previous timer for movie search
+
+        if(timerId){
+            clearTimeout(timerId);
+        }
+
+       timerId = setTimeout(function(){
+         func();
+        }, delay);
+    }
+</script>
