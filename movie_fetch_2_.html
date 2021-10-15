@@ -89,54 +89,42 @@
 
      let container = document.getElementById("display");
 
-     function showmovies(movie){
-       container.innerHTML = null;
+       function showmovies(movie){
+        container.innerHTML = null;
 
-       movie.forEach(function(movies){
+        movie.forEach(async function(movies){
 
-       let div = document.createElement("div")
-       let name = document.createElement("div");
+        let value = movies.imdbID; 
+        console.log('value:', value);
+        let rate = await fetch(`http://www.omdbapi.com/?apikey=638a97f4&i=${value}`);
+         console.log('rate:', rate);
+        let movie_rating = await rate.json();
+        let ans = (movie_rating.imdbRating)
+        console.log('ans:', ans)
+      
+
+       
+         let div = document.createElement("div")
+         let name = document.createElement("div");
          name.innerText ="TITLE: " + movies.Title;
 
-       let year = document.createElement("div");
+          let year = document.createElement("div");
           year.innerText = "YEAR OF RELEASE: " + movies.Year;
-
-      // let rate = mve_rating(movies.imdbID);
-          console.log('rate:', rate);
+          
           let rating = document.createElement("div");
-          rating.textContent = "RATING: "  ;
-         // console.log('rate:', rate)
-        
+          rating.textContent = "RATING: "  + ans;
 
-       let img = document.createElement("img");
+           let img = document.createElement("img");
            img.src= movies.Poster;
            img.setAttribute("class", "image");
            
          div.append(img, name,rating, year);
 
        container.append(div);
+
        });
     }
-    console.log("result:", mve_rating(movies.imdbID));
-
-        function mve_rating(inp){   
-        fetch(`http://www.omdbapi.com/?apikey=638a97f4&i=${inp}`)
-        .then(function(res) {
-            res.json().then(function(res){
-                let data =res.imdbRating;
-                console.log('data:', data);
-                return data;
-            })
-        });
-        
-    //     let movie_rating = await res.json();
-    //     let ans = ('movie_rating:', movie_rating.imdbRating)
-    //     console.log('ans:', ans);
-    //     return ans;
-    //    }
-
-    //    });
- }
+   
 
 
 
