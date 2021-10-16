@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #screen {
+            width: 80%;
+            border-radius: 5px;
+            border: 2px solid black;
+            margin: auto;
+            margin-top: 30px;
+        }
+     
+     
+        input {
+            width: 300px;
+            font-size: 30px;
+        }
+        #movies {
+            height: 200px;
+            width: 306px;
+            border: 1px solid black;
+            overflow: scroll;
+            border-top:none;
+            margin-right: 2%;
+        }
+    .title_result {
+        padding: 1px;
+        font-size: 25px;
+        background-color: chocolate;
+        margin-top: none;
+        border: 1px solid black;
+    }
+    #display {
+        display: flex;
+        width: 80%;
+        margin: auto;
+        margin-top: 40px;
+    }
+    .image{
+            width: 100%;
+            height: 400px;
+        }
+
+        #display > div:nth-child(1) {
+          width: 400px;
+          height: 400px;
+        }
+        #display > div:nth-child(2){
+            font-size: 25px;
+            width: 730px;
+            height: 400px;
+            margin-left: 2px;
+        }
+        #content > div {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="screen">
+        <input oninput="debounce(main, 1000)" type="text" id="movie" placeholder="Enter movie name" />
+    
+        <div id="movies">
+    
+        </div>
+   
+    <div id="display">
+        <div id=image></div>
+        <div id= content></div>
+    </div>
+    <br/>
+</body>
+</html>
+
+<script>
+ //search movies
+let movie_div = document.getElementById("movies");
+ async function searchmovies(moviename){
+     try{
+        let res = await fetch(`http://www.omdbapi.com/?apikey=638a97f4&s=${moviename}`)
+        let data = await res.json();
+        return data;
+        console.log('data:', data)
+
+     }catch(e){
+        console.log("error:", e)
+     }
+    }
+   // searchmovies("extraction");
+   let style = document.getElementById("display");
+
+    function appendMovies(movies){
+     
+
+        if(movies===undefined){
+            return false;
+        }
+        let movie_div = document.getElementById("movies");
+        movie_div.innerText = null;
+        movies.forEach(function(movie) {
+            let p=document.createElement("p")
+            p.innerText = movie.Title;
+            p.setAttribute("class","title_result")
+            movie_div.append(p);
+            p.onclick = function() {
+            movie_detail();
+            }
+            let content = document.getElementById("content");
+             let imag =document.getElementById("image")
+           async function movie_detail(){
+            content.innerHTML = null;
+            imag.innerHTML = null;
+
+
+            let det = movie.Title;
+            console.log('det:', det)
+            let res = await fetch(`http://www.omdbapi.com/?apikey=638a97f4&t=${det}`);
+            console.log('rate:', res);
+             let movie_det = await res.json();
+          
+
+            
+
+              let name = document.createElement("div");
+                 name.innerText ="TITLE:      " + movie_det.Title;
+              let country = document.createElement("div");
+                 country.innerText = "COUNTRY:     " + movie_det.Country;
+            let release = document.createElement("div");
+                release.innerText = "RELEASED ON: " + movie_det.Released;
+
+            let runtime = document.createElement("div");
+                runtime.innerText = "RUNTIME: " + movie_det.Runtime;
+
+            let genre = document.createElement("div");
+                genre.innerText = "GENRE: " + movie_det.Genre;
+
+            let director = document.createElement("div");
+                 director.innerText = "DIRECTOR:    " + movie_det.Director;   
+            let actors = document.createElement("div");
+                  actors.innerText = "ACTORS:      " + movie_det.Actors;
+            let rating = document.createElement("div");
+                  rating.innerText = "RATING IMDB:      " + movie_det.imdbRating;
+
+            let img = document.createElement("img");
+           img.src= movie_det.Poster;
+           img.setAttribute("class", "image");
+   
+            content.append(name,country,release,runtime,genre,director,actors,rating);
+            imag.append(img);
+
+           
+            style.setAttribute("style", "border: 2px solid black; border-radius: 5px; background-color:#ffa701 ")
+        
+           }
+        });
+
+    }
+
+    
+   var timerId;
+    async function main(){
+        let name = document.getElementById("movie").value;
+
+        //get searched movies 
+        if(name.length < 3){
+            return false;
+        }
+        
+        let res = await  searchmovies(name);
+        let movies_data = res.Search;
+        appendMovies(movies_data);
+        console.log('res:', res)    
+    }
+
+    function debounce(func, delay){
+        //func is the main function
+           
+        //to clear previous timer for movie search
+
+        if(timerId){
+            clearTimeout(timerId);
+        }
+
+       timerId = setTimeout(function(){
+         func();
+        }, delay);
+    }
+
+   
+</script>
