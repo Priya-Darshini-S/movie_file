@@ -251,7 +251,7 @@ let movie_div = document.getElementById("movies");
         inpu.forEach(function(movie) {
             let div = document.createElement("div");
         let img = document.createElement("img");
-           img.src= movie.poster_path;
+           img.src= `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
            img.setAttribute("id", "img_popular");
 
         let name = document.createElement("div");
