@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEW HOME</title>
+    <style>
+        .image {
+            width: 200px;
+            height: 100px;
+        }
+        #topnews >div {
+            width: 30%;
+        }
+    </style>
+</head>
+<body>
+    <div id = newspage>
+        <h2>Top News</h2>
+        <div id= topnews>
+            <button onclick="display()">search</button>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    let topnews = document.getElementById("topnews");
+
+  async function display(){
+      try{
+    let res= await fetch(
+    `https://newsapi.org/v2/everything?q=Apple&from=2021-10-18&sortBy=popularity&apiKey=0920c773adda4456b51ab5ab5b1268ce`
+    );
+    
+    let data = await res.json();
+    console.log('data:', data); 
+   shownews(data.articles)
+    }
+    catch(e){
+        console.log('error:', e)
+
+    }
+}
+
+    function shownews(news){
+        if(news == undefined){
+            return false;
+        }
+        topnews.innerHTML = null;
+        news.forEach(function(topic) {
+            let div = document.createElement("div")
+        let p = document.createElement("p");
+        p.innerText = topic.title;
+        let dis = document.createElement("p");
+        dis.innerText = topic.description;
+        let img = document.createElement("img");
+           img.src= topic.urlToImage;
+           img.setAttribute("class", "image");
+
+           div.append(img, p, dis)
+           topnews.append(div);
+        });
+
+
+    }
+</script>
