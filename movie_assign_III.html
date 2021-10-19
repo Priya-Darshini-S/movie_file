@@ -78,11 +78,19 @@
         #popular_grid > div > div{
           padding: 2px 15px;
         }
+        #user {
+         width: 25%;
+         margin: auto;
+         margin-left: 80%;
+         font-size: 25px;
+         border: 2px solid black;
+         padding: 10px
+        }
     </style>
 </head>
 <body>
     <div id="screen">
-        <br/>
+        <div id="user">USER</div>
         <div ><h1 class="heading">MY MOVIES</h1></div>
         <br/><br/>
         <div id="search_bar">
@@ -104,6 +112,16 @@
 </html>
 
 <script>
+
+    let user_name = document.getElementById("user");
+    let use = JSON.parse(localStorage.getItem("user"));
+    console.log("cart:", use);
+    if(use == null){
+        user_name.innerText = "WELCOME...! ";  
+    }else{
+    user_name.innerText = "WELCOME...! " + use;
+    }
+   // console.log("length:", cart.length);
  //search movies
 let movie_div = document.getElementById("movies");
  async function searchmovies(moviename){
