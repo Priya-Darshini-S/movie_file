@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube II</title>
+    s
+    <style>
+        body{
+            background-color: #202020;
+        }
+
+        #container{
+            display: flex;
+            flex-direction: row;
+            /* border: 1px solid white; */
+        }
+
+        .leftbar{
+            width: 250px;
+            /* border: 1px solid white; */
+        }
+
+        .rightbar{
+            width: 80%;
+            /* border: 1px solid red; */
+        }
+
+        #navbar{
+
+            height: 50px;
+            /* border: 1px solid white; */
+            display: flex;
+            flex-direction: row;
+        
+        }
+        /* search Box */
+        #query{
+            width: 600px;
+            height: 40px;
+            box-sizing: border-box;
+            padding: 10px;
+            border: 1px solid white;
+            margin-left: 100px;
+            background-color: #121212;
+            color: white;
+        }
+
+        .search{
+            height: 43px;
+            width: 65px;
+            background-color: #313131;
+            margin-right: 140px;
+        }
+
+        .options{
+            width: 100%;
+        }
+
+        #videos{
+            display: grid;
+            grid-template-columns: repeat(4,20%);
+            grid-gap: 5%;
+            padding-left: 20px;
+            overflow: scroll;
+        }
+        #videos::-webkit-scrollbar{
+            display: none;
+        }
+        .image {
+            position: absolute;
+          clip: rect(0px,400px,480px,0px);
+        }
+        .imageright{
+            width: 130px;
+            height: 50px;
+            object-fit: cover;
+          
+        }
+      
+
+    </style>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+</head>
+<body>
+    
+    <div id="container">
+
+        <div class="leftbar">
+
+            <img src="https://i.ibb.co/kJqNPvk/4.jpg" class="image">
+
+        </div>
+        <div class="rightbar">
+            <div id="navbar">
+
+                <input type="text" id="query" placeholder="Search here"/>
+                <button onclick="searchVideos()" class="search">
+                    <span class="material-icons-outlined">search</span>                    
+                </button>
+                <img src="https://i.ibb.co/PG6d8v1/5.jpg" class="imageright">
+
+            </div>
+
+            <div>
+                <img class="options" src="https://i.ibb.co/D4TM5QF/6.jpg">
+            </div>
+
+            <div id="videos">
+            </div>
+        </div>
+    </div>
+    
+
+</body>
+</html>
+<script>
+async function trend_videos(){
+    let query = document.getElementById("query").value;
+    let res = await fetch(`https://youtube.googleapis.com/youtube/v3/search?q=world trending&type=video&key=AIzaSyANuBmXAUFLTLgYyiK2OsYsCKBJq_Glw6s&maxResults=20`);
+let data = await res.json();
+        console.log('data:', data); 
+      appendVideos(data.items); 
+};
+trend_videos();
+
+let videos = document.getElementById("videos")
+async function searchVideos(){
+    let query = document.getElementById("query").value;
+    let res = await fetch(`https://youtube.googleapis.com/youtube/v3/search?q=${query}&type=video&key=AIzaSyANuBmXAUFLTLgYyiK2OsYsCKBJq_Glw6s&maxResults=20`);
+let data = await res.json();
+        console.log('data:', data); 
+      appendVideos(data.items); 
+}
+ function appendVideos(video_data){
+ videos.innerHTML = null;
+video_data.forEach(({id: {videoId}}) =>{
+let div = document.createElement("div");
+div.innerHTML = `<iframe width="320" height="215" src="https://www.youtube.com/embed/${videoId}" title="YouTube video player";  frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>`
+videos.append(div);
+ });
+ }
+</script>
