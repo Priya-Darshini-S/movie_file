@@ -78,6 +78,12 @@
             object-fit: cover;
           
         }
+        #user {
+            color: white;
+           padding-top: 12px;
+            width: 15%;
+            border: 2px solid white;
+        }
       
 
     </style>
@@ -102,6 +108,7 @@
                     <span class="material-icons-outlined">search</span>                    
                 </button>
                 <img src="https://i.ibb.co/PG6d8v1/5.jpg" class="imageright">
+                <span id="user">USER</span>
 
             </div>
 
@@ -118,6 +125,15 @@
 </body>
 </html>
 <script>
+     let user_name = document.getElementById("user");
+    let use = JSON.parse(localStorage.getItem("youtube"));
+    console.log("cart:", use);
+    if(use == null){
+        user_name.innerText = "USER ";  
+    }else{
+    user_name.innerText = "USER: " + use;
+    }
+
 async function trend_videos(){
     let query = document.getElementById("query").value;
     let res = await fetch(`https://youtube.googleapis.com/youtube/v3/search?q=world trending&type=video&key=AIzaSyANuBmXAUFLTLgYyiK2OsYsCKBJq_Glw6s&maxResults=20`);
